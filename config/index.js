@@ -1,3 +1,2 @@
-import connectMongoose from './db';
-
-export {connectMongoose};
+export {default as connectMongoose} from './db.js';
+export {default as passport} from './passport.js';

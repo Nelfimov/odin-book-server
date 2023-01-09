@@ -8,15 +8,21 @@
     "devStart": "nodemon ./bin/www"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "~4.16.1",
+    "express-flash": "^0.0.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.2",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^8.31.0",

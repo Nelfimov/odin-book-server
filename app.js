@@ -8,9 +8,12 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+import {connectMongoose} from './config/index.js';
 import {startRouter} from './routes/index.js';
 
 const app = express();
+
+connectMongoose(process.env.MONGODB_URL);
 
 // view engine setup
 const __dirname = dirname(fileURLToPath(import.meta.url));

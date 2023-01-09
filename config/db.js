@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
  * Connect to MongoDB through mongoose.
  * @param {String} url - connect to database.
  */
-function connectMongoose(url) {
+export default function connectMongoose(url) {
   mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -16,5 +16,3 @@ function connectMongoose(url) {
         console.log('Error: ' + err);
       });
 }
-
-export default connectMongoose();

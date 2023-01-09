@@ -1,3 +1,1 @@
-import startRouter from './start.js';
-
-export {startRouter};
+export {default as startRouter} from './start.js';
