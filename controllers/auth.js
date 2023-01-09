@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import {User} from '../models/index.js';
+import {issueJWT} from '../config/index.js';
 
 const noPassword = {
   success: false,
