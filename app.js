@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-import {connectMongoose} from './config/index.js';
+import {connectMongoose, passport} from './config/index.js';
 import {startRouter} from './routes/index.js';
 
 const app = express();
@@ -22,6 +22,7 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(json());
+app.use(passport.initialize());
 app.use(urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));

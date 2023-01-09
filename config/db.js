@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 /**
  * Connect to MongoDB through mongoose.
- * @param {String} url - connect to database.
+ * @param {String} url - database URL.
  */
 export default function connectMongoose(url) {
   mongoose.connect(url, {
