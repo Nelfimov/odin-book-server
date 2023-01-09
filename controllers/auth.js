@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import {User} from '../models/index.js';
-import {issueJWT} from '../config/index.js';
+import {issueToken} from '../config/index.js';
 
 const noPassword = {
   success: false,
@@ -78,7 +78,7 @@ export async function login(req, res, next) {
 
   const result = bcryptjs.compareSync(password, user.password);
   if (!result) res.json(wrongPassword);
-  const jwt = issueJWT(user);
+  const jwt = issueToken(user);
   return res.json({
     success: true,
 
