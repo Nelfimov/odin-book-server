@@ -61,4 +61,25 @@ export async function getPostsFromFriends(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
+
+/**
+ * Get post by id
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function getPostById(req, res, next) {
+  try {
+    const postID = req.params.id;
+    const post = await Post.findById(postID).exec();
+
+    return res.json({
+      success: true,
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
