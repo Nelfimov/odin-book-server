@@ -19,4 +19,5 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/posts/
-Authorization: 'Bearer '
+Content-Type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTM2MjY3ODAsImV4cCI6MTY3MzM1MzcxMzE4MH0.CnWoJRkHN7JLHI2ySxUM7EqXyczYmPv1HfS_9-oCQGA"
