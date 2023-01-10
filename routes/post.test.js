@@ -6,8 +6,9 @@ import app from '../app-test.js';
 app.use('/posts', postRouter);
 app.use('/auth', authRouter);
 
+
 describe('GET /posts', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await stopMongoServer();
     await initializeMongoServer();
   });
@@ -30,6 +31,7 @@ describe('GET /posts', () => {
           email: 'example@example.com',
           password: '1234',
         });
+    console.log(responseRegister.body);
     expect(responseRegister.body.success).toBeTruthy();
     const responsePost = await request(app)
         .get('/posts')
@@ -38,8 +40,34 @@ describe('GET /posts', () => {
   });
 });
 
-/*
 describe('POST /posts', () => {
+  beforeAll(async () => {
+    await stopMongoServer();
+    await initializeMongoServer();
+  });
 
+  afterAll(async () => {
+    await stopMongoServer();
+  });
+
+  it('creates new post', async () => {
+    const responseRegister = await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'Example',
+          email: 'example@example.com',
+          password: '1234',
+        });
+    expect(responseRegister.body.success).toBeTruthy();
+    const responsePost = await request(app)
+        .post('/posts')
+        .set('Authorization', responseRegister.body.token)
+        .send({
+          text: 'this is a new post',
+          title: 'title',
+        });
+    expect(responsePost.body.success).toBeTruthy();
+    expect(responsePost.body.post.title).toBe('title');
+    expect(responsePost.body.post.author.username).toBe('Example');
+  });
 });
-*/

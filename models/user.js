@@ -28,12 +28,12 @@ const UserSchema = new Schema({
       const usernameQuery = User.find({username: this.username});
       const emailQuery = User.find({email: this.email});
 
-      if (usernameQuery != undefined) {
+      if (usernameQuery.length > 0) {
         success = false;
         message += 'This username is already taken. ';
       };
 
-      if (emailQuery != undefined) {
+      if (emailQuery.length > 0) {
         success = false;
         message += 'This email is already taken.';
       };

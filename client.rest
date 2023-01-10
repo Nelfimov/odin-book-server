@@ -20,4 +20,9 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/posts/
 Content-Type: application/json
-Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTM2MjY3ODAsImV4cCI6MTY3MzM1MzcxMzE4MH0.CnWoJRkHN7JLHI2ySxUM7EqXyczYmPv1HfS_9-oCQGA"
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTQ1NDk1MTIsImV4cCI6MTY3MzM1NDYzNTkxMn0.UO1aGSC2Qg5T8fHFG2_VtHcIjragctLOSk4yZLH7oR0
+
+###
+POST http://localhost:3000/posts/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTQ1NDk1MTIsImV4cCI6MTY3MzM1NDYzNTkxMn0.UO1aGSC2Qg5T8fHFG2_VtHcIjragctLOSk4yZLH7oR0
