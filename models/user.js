@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     ]},
   }],
 }, {
-  statics: {
+  methods: {
     /**
      * Check if the username and email are already taken.
      * @param {String} username
@@ -22,11 +22,11 @@ const UserSchema = new Schema({
      * @return {Object.<boolean, string>} 'success' true if unique.
      * Else 'message' with reason.
      */
-    isUserUnique(username, email) {
+    isUserUnique() {
       let success = true;
-      message = '';
-      const usernameQuery = this.find({username});
-      const emailQuery = this.find({email});
+      let message = '';
+      const usernameQuery = User.find({username: this.username});
+      const emailQuery = User.find({email: this.email});
 
       if (usernameQuery != undefined) {
         success = false;

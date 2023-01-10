@@ -1,16 +1,19 @@
-import {connect, connection} from 'mongoose';
+import mongoose, {connect} from 'mongoose';
 import {MongoMemoryServer} from 'mongodb-memory-server';
 
 /**
- * Initialize in memory testing database
+ * Initialize in memory testing database.
  */
-export default async function initializeMongoServer() {
-  const mongoServer = await MongoMemoryServer.create();
+export async function initializeMongoServer() {
+  const mongoServer = await MongoMemoryServer.create({
+    binary: {version: '4.4.4'},
+  });
   const mongoUri = mongoServer.getUri();
 
   connect(mongoUri);
 
-  connection.on('error', (e) => {
+  mongoose.set('strictQuery', true);
+  mongoose.connection.on('error', (e) => {
     if (e.message.code === 'ETIMEDOUT') {
       console.log(e);
       connect(mongoUri);
@@ -18,7 +21,18 @@ export default async function initializeMongoServer() {
     console.log(e);
   });
 
-  connection.once('open', () => {
+  mongoose.connection.once('open', () => {
     console.log(`MongoDB successfully connected to ${mongoUri}`);
   });
 }
+
+/**
+ * Stop mongo server
+ */
+export async function stopMongoServer() {
+  await mongoose.disconnect();
+
+  mongoose.connection.once('close', () => {
+    console.log('MongoDB connection closed');
+  });
+};

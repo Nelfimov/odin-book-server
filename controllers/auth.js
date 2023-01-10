@@ -1,4 +1,4 @@
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import {User} from '../models/index.js';
 import {issueToken} from '../config/index.js';
 
@@ -32,25 +32,27 @@ const wrongPassword = {
 export function register(req, res, next) {
   const {username, password, email} = req.body;
   if (!password) return res.json(noPassword);
-  if (!username && !email) return res.json(noUsernameAndEmail);
+  if (!username || !email) return res.json(noUsernameAndEmail);
 
-  bcryptjs.hash(password, process.env.SALT, (err, hashedPassword) => {
+  bcrypt.hash(password, 10, async (err, hashedPassword) => {
     if (err) return next(err);
 
     const user = new User({username, email, password: hashedPassword});
-    const unique = user.isUserUnique(username, email);
+    const unique = user.isUserUnique();
 
     if (!unique) return res.json(unique);
 
-    user.save()
-        .then((user) => res.json({
-          success: true,
-          message: 'Successfully registered, you can now log in.',
-          user,
-          token: jwt.token,
-          expiresIn: jwt.expiresIn,
-        }))
-        .catch((err) => next(err));
+    await user.save();
+
+    const jwt = issueToken(user);
+
+    return res.json({
+      success: true,
+      message: 'Successfully registered, you can now log in.',
+      user,
+      token: jwt.token,
+      expiresIn: jwt.expiresIn,
+    });
   });
 };
 
@@ -76,7 +78,7 @@ export async function login(req, res, next) {
     user = await User.findOne({email}).exec();
   }
 
-  const result = bcryptjs.compareSync(password, user.password);
+  const result = bcrypt.compareSync(password, user.password);
   if (!result) res.json(wrongPassword);
   const jwt = issueToken(user);
   return res.json({

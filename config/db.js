@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
  * @param {String} url - database URL.
  */
 export default function connectMongoose(url) {
+  mongoose.set('strictQuery', true);
   mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

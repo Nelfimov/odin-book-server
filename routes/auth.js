@@ -1,10 +1,9 @@
 import {Router as router} from 'express';
-import {register, login} from '../controllers/index.js';
+import {authController} from '../controllers/index.js';
 
 const customRouter = router();
 
-customRouter.post('/register', register);
-
-customRouter.post('/login', login);
+customRouter.post('/register', authController.register);
+customRouter.post('/login', authController.login);
 
 export default customRouter;

@@ -9,7 +9,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import {connectMongoose, passport} from './config/index.js';
-import {startRouter} from './routes/index.js';
+import {authRouter, startRouter} from './routes/index.js';
 
 const app = express();
 
@@ -28,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
 app.use('/', startRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,7 +43,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({success: false, message: err.message});
 });
 
 export default app;
