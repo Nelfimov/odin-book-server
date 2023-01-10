@@ -17,9 +17,7 @@ const UserSchema = new Schema({
   methods: {
     /**
      * Check if the username and email are already taken.
-     * @param {String} username
-     * @param {String} email
-     * @return {Object.<boolean, string>} 'success' true if unique.
+     * @return {shape} {success=true} if unique.
      * Else 'message' with reason.
      */
     isUserUnique() {
