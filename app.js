@@ -9,7 +9,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import {connectMongoose, passport} from './config/index.js';
-import {authRouter, postRouter, startRouter} from './routes/index.js';
+import {authRouter, postRouter,
+  profileRouter, startRouter} from './routes/index.js';
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.static(join(__dirname, 'public')));
 app.use('/', startRouter);
 app.use('/auth', authRouter);
 app.use('/posts', postRouter);
+app.use('/profile', profileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
