@@ -31,7 +31,6 @@ describe('GET /posts', () => {
           email: 'example@example.com',
           password: '1234',
         });
-    console.log(responseRegister.body);
     expect(responseRegister.body.success).toBeTruthy();
     const responsePost = await request(app)
         .get('/posts')
