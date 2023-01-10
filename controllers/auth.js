@@ -91,7 +91,7 @@ export async function login(req, res, next) {
     success: true,
     message: 'Successfull log in',
     user,
-    jwt,
+    token: jwt.token,
     expiresIn: jwt.expires,
   });
 };

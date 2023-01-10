@@ -72,7 +72,7 @@ export async function getPostsFromFriends(req, res, next) {
  */
 export async function getPostById(req, res, next) {
   try {
-    const postID = req.params.id;
+    const postID = req.params.postID;
     const post = await Post.findById(postID).exec();
 
     return res.json({

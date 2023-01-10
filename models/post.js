@@ -1,9 +1,9 @@
 import {Schema, model} from 'mongoose';
 
 const PostSchema = new Schema({
-  title: {type: String, require: true},
-  text: {type: String, require: true},
-  author: {type: Schema.Types.ObjectId, ref: 'User', require: true},
+  title: {type: String, required: true},
+  text: {type: String, required: true},
+  author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
 }, {timestamps: true});
 
 const Post = model('Post', PostSchema);

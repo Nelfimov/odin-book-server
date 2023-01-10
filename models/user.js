@@ -1,9 +1,9 @@
 import {Schema, model} from 'mongoose';
 
 const UserSchema = new Schema({
-  username: {type: String, unique: true, require: true},
-  email: {type: String, unique: true, require: true},
-  password: {type: String, require: true},
+  username: {type: String, unique: true, required: true},
+  email: {type: String, unique: true, required: true},
+  password: {type: String, required: true},
   friends: [{
     user: {type: Schema.Types.ObjectId, ref: 'User'},
     status: {type: Number, enum: [

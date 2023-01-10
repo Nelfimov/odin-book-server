@@ -21,7 +21,8 @@ export async function getComments(req, res, next) {
 }
 
 /**
- * Get comment by id.
+ * Get comment by id. Checks in parallel if such post
+ * exists and searches comment by ID.
  * @param {shape} req Request object
  * @param {shape} res Response object
  * @param {function} next Next
@@ -63,6 +64,27 @@ export async function getCommentById(req, res, next) {
         success: true,
         comment,
       });
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Create comment for specific post.
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next
+ */
+export async function createComment(req, res, next) {
+  try {
+    const postID = req.params.postID;
+    const {text} = req.body;
+    const comment = new Comment({text, author: req.user, post: postID});
+    await comment.save();
+    return res.json({
+      success: true,
+      comment,
     });
   } catch (err) {
     next(err);
