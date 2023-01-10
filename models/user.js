@@ -30,12 +30,12 @@ const UserSchema = new Schema({
 
       if (usernameQuery != undefined) {
         success = false;
-        message.concat([message, 'This username is already taken. ']);
+        message += 'This username is already taken. ';
       };
 
       if (emailQuery != undefined) {
         success = false;
-        message.concat([message, 'This email is already taken.']);
+        message += 'This email is already taken.';
       };
 
       if (success) message = 'Success, username and email are free.';
