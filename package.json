@@ -35,6 +35,9 @@
     "supertest": "^6.3.3"
   },
   "jest": {
-    "testTimeout": 10000
+    "testTimeout": 10000,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

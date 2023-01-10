@@ -66,7 +66,7 @@ export function register(req, res, next) {
 export async function login(req, res, next) {
   const {username, email, password} = req.body;
   if (!password) return res.json(noPassword);
-  if (!username || !email) return res.json(noUsernameOrEmail);
+  if (!username && !email) return res.json(noUsernameOrEmail);
 
   let user;
 
@@ -79,11 +79,10 @@ export async function login(req, res, next) {
   }
 
   const result = bcrypt.compareSync(password, user.password);
-  if (!result) res.json(wrongPassword);
+  if (!result) return res.json(wrongPassword);
   const jwt = issueToken(user);
   return res.json({
     success: true,
-
     message: 'Successfull log in',
     user,
     jwt,

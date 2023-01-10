@@ -1,4 +1,4 @@
-import mongoose, {connect} from 'mongoose';
+import mongoose from 'mongoose';
 import {MongoMemoryServer} from 'mongodb-memory-server';
 
 /**
@@ -9,10 +9,10 @@ export async function initializeMongoServer() {
     binary: {version: '4.4.4'},
   });
   const mongoUri = mongoServer.getUri();
-
-  connect(mongoUri);
-
   mongoose.set('strictQuery', true);
+
+  mongoose.connect(mongoUri);
+
   mongoose.connection.on('error', (e) => {
     if (e.message.code === 'ETIMEDOUT') {
       console.log(e);
@@ -25,6 +25,13 @@ export async function initializeMongoServer() {
     console.log(`MongoDB successfully connected to ${mongoUri}`);
   });
 }
+
+/**
+ * Drop database
+ */
+export async function dropDatabase() {
+  await mongoose.connection.db.dropDatabase();
+};
 
 /**
  * Stop mongo server
