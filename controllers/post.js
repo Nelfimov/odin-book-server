@@ -14,7 +14,6 @@ export async function getPosts(req, res, next) {
     return res.json({
       success: true,
       posts,
-      user: req.user,
     });
   } catch (err) {
     next(err);
@@ -22,7 +21,7 @@ export async function getPosts(req, res, next) {
 };
 
 /**
- * Get all posts from db
+ * Create new post
  * @param {shape} req Request object
  * @param {shape} res Response object
  * @param {function} next Next middleware
@@ -37,6 +36,27 @@ export async function createPost(req, res, next) {
     return res.json({
       success: true,
       post,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Get all posts from friends
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function getPostsFromFriends(req, res, next) {
+  try {
+    const friends = req.user.friends;
+    const posts = await Post.find({author: {$in: friends}}).exec();
+
+    return res.json({
+      success: true,
+      posts,
     });
   } catch (err) {
     next(err);
