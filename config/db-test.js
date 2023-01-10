@@ -11,7 +11,7 @@ export async function initializeMongoServer() {
   const mongoUri = mongoServer.getUri();
   mongoose.set('strictQuery', true);
 
-  mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri);
 
   mongoose.connection.on('error', (e) => {
     if (e.message.code === 'ETIMEDOUT') {
@@ -21,9 +21,11 @@ export async function initializeMongoServer() {
     console.log(e);
   });
 
+  /*
   mongoose.connection.once('open', () => {
     console.log(`MongoDB successfully connected to ${mongoUri}`);
   });
+  */
 }
 
 /**
@@ -39,7 +41,9 @@ export async function dropDatabase() {
 export async function stopMongoServer() {
   await mongoose.disconnect();
 
+  /*
   mongoose.connection.once('close', () => {
     console.log('MongoDB connection closed');
   });
+  */
 };

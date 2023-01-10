@@ -1,16 +1,21 @@
 import {Router as router} from 'express';
-import customPassport from '../config/passport.js';
-import {Post} from '../models.js';
+import {passport} from '../config/index.js';
+// import {Post} from '../models/index.js';
 
 const postRouter = router();
 
-postRouter.use(customPassport.authenticate('jwt', {session: false}));
+postRouter.use(
+    passport.authenticate('jwt', {
+      session: false, failWithError: true, failureMessage: true,
+    }),
+);
 
 postRouter.get('/', async (req, res, next) => {
-  const posts = await Post.find({}).exec();
+  // const posts = await Post.find({}).exec();
 
-  return req.json({
+  return res.json({
     success: true,
-    posts,
   });
 });
+
+export default postRouter;

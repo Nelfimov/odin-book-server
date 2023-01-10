@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "devStart": "nodemon ./bin/www",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --detectOpenHandles"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

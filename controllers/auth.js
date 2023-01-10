@@ -74,8 +74,14 @@ export async function login(req, res, next) {
     user = await User.findOne({username}).exec();
   }
 
-  if (email && !user) {
+  if (!user && email) {
     user = await User.findOne({email}).exec();
+  }
+
+  if (!user) {
+    return res.json({
+      success: false,
+      message: 'No such user'});
   }
 
   const result = bcrypt.compareSync(password, user.password);
