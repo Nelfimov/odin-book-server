@@ -40,17 +40,28 @@ describe('POST /auth/register', () => {
   it('registers', async () => {
     const response = await request(app)
         .post('/auth/register')
-        .send({password: '123456789', username: 'Example',
-          email: 'example@example.com'});
+        .send({
+          password: '123456789',
+          username: 'Example',
+          email: 'example@example.com',
+        });
     expect(response.body.success).toBeTruthy();
     expect(response.body.user.username).toBe('Example');
   });
 });
 
 describe('POST /auth/login', () => {
+  let user;
+
   beforeAll(async () => {
-    await stopMongoServer();
     await initializeMongoServer();
+    user = await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'Example',
+          email: 'example@example.com',
+          password: '1234',
+        });
   });
 
   afterAll(async () => {
@@ -67,29 +78,22 @@ describe('POST /auth/login', () => {
   });
 
   it('wrong password', async () => {
-    await request(app)
-        .post('/auth/register')
-        .send({
-          username: 'Example',
-          email: 'example@example.com',
-          password: '1234',
-        });
-    const responseLogin = await request(app)
+    const response = await request(app)
         .post('/auth/login')
         .send({
           username: 'Example',
           password: '4321',
         });
-    expect(responseLogin.body.success).toBeFalsy();
+    expect(response.body.success).toBeFalsy();
   });
 
   it('successfully logs in', async () => {
-    const responseLogin = await request(app)
+    const response = await request(app)
         .post('/auth/login')
         .send({
           username: 'Example',
           password: '1234',
         });
-    expect(responseLogin.body.success).toBeTruthy();
+    expect(response.body.success).toBeTruthy();
   });
 });

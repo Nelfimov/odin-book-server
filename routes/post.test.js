@@ -8,9 +8,17 @@ app.use('/auth', authRouter);
 
 
 describe('GET /posts', () => {
-  beforeEach(async () => {
-    await stopMongoServer();
+  let user;
+
+  beforeAll(async () => {
     await initializeMongoServer();
+    user = await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'Example',
+          email: 'example@example.com',
+          password: '1234',
+        });
   });
 
   afterAll(async () => {
@@ -24,25 +32,25 @@ describe('GET /posts', () => {
   });
 
   it('has access with authorization', async () => {
-    const responseRegister = await request(app)
+    const response = await request(app)
+        .get('/posts')
+        .set('Authorization', user.body.token);
+    expect(response.body.success).toBeTruthy();
+  });
+});
+
+describe('POST /posts', () => {
+  let user;
+
+  beforeAll(async () => {
+    await initializeMongoServer();
+    user = await request(app)
         .post('/auth/register')
         .send({
           username: 'Example',
           email: 'example@example.com',
           password: '1234',
         });
-    expect(responseRegister.body.success).toBeTruthy();
-    const responsePost = await request(app)
-        .get('/posts')
-        .set('Authorization', responseRegister.body.token);
-    expect(responsePost.body.success).toBeTruthy();
-  });
-});
-
-describe('POST /posts', () => {
-  beforeAll(async () => {
-    await stopMongoServer();
-    await initializeMongoServer();
   });
 
   afterAll(async () => {
@@ -50,23 +58,15 @@ describe('POST /posts', () => {
   });
 
   it('creates new post', async () => {
-    const responseRegister = await request(app)
-        .post('/auth/register')
-        .send({
-          username: 'Example',
-          email: 'example@example.com',
-          password: '1234',
-        });
-    expect(responseRegister.body.success).toBeTruthy();
-    const responsePost = await request(app)
+    const response = await request(app)
         .post('/posts')
-        .set('Authorization', responseRegister.body.token)
+        .set('Authorization', user.body.token)
         .send({
           text: 'this is a new post',
           title: 'title',
         });
-    expect(responsePost.body.success).toBeTruthy();
-    expect(responsePost.body.post.title).toBe('title');
-    expect(responsePost.body.post.author.username).toBe('Example');
+    expect(response.body.success).toBeTruthy();
+    expect(response.body.post.title).toBe('title');
+    expect(response.body.post.author.username).toBe('Example');
   });
 });

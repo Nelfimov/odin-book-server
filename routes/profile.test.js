@@ -8,16 +8,19 @@ app.use('/auth', authRouter);
 
 
 describe('POST /profile/:id', () => {
+  let you;
+  let friend;
+
   beforeAll(async () => {
     await initializeMongoServer();
-    await request(app)
+    you = await request(app)
         .post('/auth/register')
         .send({
           username: 'Example 1',
           email: 'example1@example.com',
           password: '123',
         });
-    await request(app)
+    friend = await request(app)
         .post('/auth/register')
         .send({
           username: 'Example 2',
@@ -31,24 +34,9 @@ describe('POST /profile/:id', () => {
   });
 
   it('can send friend request', async () => {
-    const responseLogin = await request(app)
-        .post('/auth/login')
-        .send({
-          username: 'Example 1',
-          password: '123',
-        });
-    expect(responseLogin.body.success).toBeTruthy();
-    const responseLoginFriend = await request(app)
-        .post('/auth/login')
-        .send({
-          username: 'Example 2',
-          password: '321',
-        });
-    expect(responseLoginFriend.body.user.id).toBe();
-    const responseFriend = await request(app)
-        .post(`/profile/${responseLoginFriend.body.user._id}/request`)
-        .set('Authorization', responseLogin.body.token);
-    console.log(responseFriend.statusCode);
-    expect(responseFriend.body.success).toBeTruthy();
+    const response = await request(app)
+        .post(`/profile/${friend.body.user._id}/request`)
+        .set('Authorization', you.body.token);
+    expect(response.body.success).toBeTruthy();
   });
 });
