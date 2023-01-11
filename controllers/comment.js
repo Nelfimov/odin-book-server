@@ -10,7 +10,9 @@ import {parallel} from 'async';
 export async function getComments(req, res, next) {
   try {
     const postID = req.params.postID;
-    const comments = await Comment.find({post: postID}).exec();
+    const comments = await Comment.find({post: postID})
+        .populate('author', 'username')
+        .lean().exec();
     return res.json({
       success: true,
       comments,
@@ -40,7 +42,7 @@ export async function getCommentById(req, res, next) {
             .exec(cb);
       },
       function post(cb) {
-        Post.findById(postID).exec(cb);
+        Post.findById(postID).lean().exec(cb);
       },
     ], (err, results) => {
       if (err) return next(err);

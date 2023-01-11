@@ -9,7 +9,7 @@ import {Post} from '../models/index.js';
  */
 export async function getPosts(req, res, next) {
   try {
-    const posts = await Post.find({}).exec();
+    const posts = await Post.find({}).lean().exec();
 
     return res.json({
       success: true,
@@ -52,7 +52,7 @@ export async function createPost(req, res, next) {
 export async function getPostsFromFriends(req, res, next) {
   try {
     const friends = req.user.friends;
-    const posts = await Post.find({author: {$in: friends}}).exec();
+    const posts = await Post.find({author: {$in: friends}}).lean().exec();
 
     return res.json({
       success: true,
@@ -73,7 +73,7 @@ export async function getPostsFromFriends(req, res, next) {
 export async function getPostById(req, res, next) {
   try {
     const postID = req.params.postID;
-    const post = await Post.findById(postID).exec();
+    const post = await Post.findById(postID).lean().exec();
 
     return res.json({
       success: true,
@@ -83,3 +83,49 @@ export async function getPostById(req, res, next) {
     next(err);
   }
 };
+
+/**
+ * Like post
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function likePost(req, res, next) {
+  try {
+    const postID = req.params.postID;
+    const post = await Post.findById(postID).exec();
+    post.increaseLikesCount();
+
+    return res.json({
+      success: true,
+      message: 'Likes count increased',
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Dislike post
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function dislikePost(req, res, next) {
+  try {
+    const postID = req.params.postID;
+    const post = await Post.findById(postID).exec();
+    post.increaseLikesCount();
+
+    return res.json({
+      success: true,
+      message: 'Likes count increased',
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+}

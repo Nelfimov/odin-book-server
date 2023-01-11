@@ -71,11 +71,11 @@ export async function login(req, res, next) {
   let user;
 
   if (username) {
-    user = await User.findOne({username}).exec();
+    user = await User.findOne({username}).lean().exec();
   }
 
   if (!user && email) {
-    user = await User.findOne({email}).exec();
+    user = await User.findOne({email}).lean().exec();
   }
 
   if (!user) {

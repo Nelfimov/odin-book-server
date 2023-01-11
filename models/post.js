@@ -4,23 +4,46 @@ const PostSchema = new Schema({
   title: {type: String, required: true},
   text: {type: String, required: true},
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
-  likes_count: {type: Number, default: 0},
+  likes: {
+    count: {type: Number, default: 0},
+    users: [{
+      user: {type: Schema.Types.ObjectId, ref: 'User'},
+    }],
+  },
 }, {
   timestamps: true,
   methods: {
     /**
-     * Increase likes count.
+     * Increase likes count if user has not liked it previously. Else unlike it.
+     * @param {string} id ID of user liking post.
+     * @return {shape}
      */
-    increaseLikesCount() {
-      this.likes_count++;
-      this.save();
-    },
-    /**
-     * Decrease likes count.
-     */
-    decreaseLikesCount() {
-      this.likes_count--;
-      this.save();
+    async changeLikesCount(id) {
+      try {
+        let message;
+        const userIndex = this.likes.users.findIndex((user) => user._id == id);
+        if (userIndex < 0) {
+          ++this.likes.count;
+          this.likes.users.push({
+            user: id,
+          });
+          message = 'Succesfully liked post';
+        } else {
+          --this.likes.count;
+          this.likes.users.slice(userIndex, 1);
+          message = 'Succesfully unliked post';
+        };
+        await this.save();
+        return {
+          success: true,
+          message,
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: err,
+        };
+      }
     },
   },
 });
