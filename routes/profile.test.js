@@ -86,4 +86,19 @@ describe('GET /profile/:id', () => {
         .lean().exec();
     expect(user2.friends[0].status).toBe('requested');
   });
+
+  it('can delete from friends list', async () => {
+    const response = await request(app)
+        .get(`/profile/${enemy.body.user._id}/delete`)
+        .set('Authorization', you.body.token);
+    expect(response.body.success).toBeTruthy();
+    const user1 = await User.findById(you.body.user._id)
+        .populate({path: 'friends', populate: {path: 'user'}})
+        .lean().exec();
+    expect(user1.friends.length).toBe(1);
+    const user2 = await User.findById(enemy.body.user._id)
+        .populate({path: 'friends', populate: {path: 'user'}})
+        .lean().exec();
+    expect(user2.friends.length).toBe(0);
+  });
 });

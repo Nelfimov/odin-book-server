@@ -80,3 +80,18 @@ export async function rejectFriendRequest(req, res, next) {
     return next(err);
   }
 }
+
+/**
+ * Reject incoming friend request.
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next
+ */
+export async function deleteFromFriends(req, res, next) {
+  try {
+    const result = await req.user.deleteFromFriends(req.params.userID);
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
+}

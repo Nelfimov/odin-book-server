@@ -19,6 +19,7 @@ profileRouter
 profileRouter
     .get('/:userID/request', profileController.sendFriendRequest)
     .get('/:userID/accept', profileController.acceptFriendRequest)
-    .get('/:userID/reject', profileController.rejectFriendRequest);
+    .get('/:userID/reject', profileController.rejectFriendRequest)
+    .get('/:userID/delete', profileController.deleteFromFriends);
 
 export default profileRouter;
