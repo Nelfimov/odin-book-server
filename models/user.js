@@ -82,6 +82,11 @@ const UserSchema = new Schema({
         };
       }
     },
+    /**
+     * Accept incoming friend request.
+     * @param {string} id ID of user whos request to accept.
+     * @return {shape}
+     */
     async acceptFriendRequest(id) {
       try {
         const result = await this.friendCheck(id, 'friends');
@@ -106,6 +111,11 @@ const UserSchema = new Schema({
         };
       }
     },
+    /**
+     * Reject incoming friend request.
+     * @param {string} id ID of user whos request to reject.
+     * @return {shape}
+     */
     async rejectFriendRequest(id) {
       try {
         const result = await this.friendCheck(id, 'rejected');
@@ -163,7 +173,7 @@ const UserSchema = new Schema({
         if (this._id === id) {
           return {
             success: false,
-            message: 'You cannot add yourself as friend',
+            message: 'You cannot perform this operation with yourself',
           };
         }
 
@@ -187,6 +197,40 @@ const UserSchema = new Schema({
           message: err,
         };
       }
+    },
+    async deleteFromFriends(id) {
+      try {
+        const result = await this.friendCheck(id, null);
+        if (!result.success) {
+          return {
+            success: result.success,
+            message: result.message,
+          };
+        };
+
+        const index = this.friends.findIndex((friend) => {
+          return friend.user._id == id;
+        });
+        this.friends.splice(index, 1);
+        await this.save();
+
+        const friend = await model('User').findById(id).exec();
+        const friendIndex = friend.friends.findIndex((friend) => {
+          return friend.user._id == id;
+        });
+        friend.friends.splice(friendIndex, 1);
+        await friend.save();
+
+        return {
+          success: true,
+          message: 'User successfully deleted from friends list',
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: err,
+        };
+      };
     },
   },
 });
