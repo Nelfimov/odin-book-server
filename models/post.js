@@ -20,6 +20,13 @@ const PostSchema = new Schema({
      */
     async changeLikesCount(id) {
       try {
+        if (this.author._id.equals(id)) {
+          return {
+            success: false,
+            message: 'Cannot like your own posts',
+          };
+        }
+
         let message;
         const userIndex = this.likes.users.findIndex((user) => user._id == id);
         if (userIndex < 0) {

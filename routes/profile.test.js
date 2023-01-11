@@ -42,6 +42,16 @@ describe('GET /profile/:id', () => {
     await stopMongoServer();
   });
 
+  it('cannot send friend request to yourself', async () => {
+    const response = await request(app)
+        .get(`/profile/${you.body.user._id}/request`)
+        .set('Authorization', you.body.token);
+    expect(response.body.success).toBeFalsy();
+    const user = await User.findById(you.body.user._id)
+        .populate({path: 'friends', populate: {path: 'user'}}).lean().exec();
+    expect(user.friends.length).toBe(0);
+  });
+
   it('can send friend request', async () => {
     const response = await request(app)
         .get(`/profile/${friend.body.user._id}/request`)

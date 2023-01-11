@@ -21,5 +21,7 @@ postRouter
 postRouter
     .get('/:postID', postController.getPostById);
 
+postRouter
+    .get('/:postID/like', postController.likePost);
 
 export default postRouter;

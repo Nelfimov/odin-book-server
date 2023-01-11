@@ -170,7 +170,7 @@ const UserSchema = new Schema({
      */
     async friendCheck(id, status) {
       try {
-        if (this._id === id) {
+        if (this._id.equals(id)) {
           return {
             success: false,
             message: 'You cannot perform this operation with yourself',

@@ -2,6 +2,7 @@ import request from 'supertest';
 import {postRouter, authRouter} from './index.js';
 import {initializeMongoServer, stopMongoServer} from '../config/index.js';
 import app from '../app-test.js';
+import {Post} from '../models/index.js';
 
 app.use('/posts', postRouter);
 app.use('/auth', authRouter);
@@ -68,5 +69,15 @@ describe('POST /posts', () => {
     expect(response.body.success).toBeTruthy();
     expect(response.body.post.title).toBe('title');
     expect(response.body.post.author.username).toBe('Example');
+  });
+
+  it('cannot like own post', async () => {
+    const post = await Post.findOne({}).populate('author').lean().exec();
+    expect(post.author.username).toBe(user.body.user.username);
+
+    const response = await request(app)
+        .get(`/posts/${post._id}/like`)
+        .set('Authorization', user.body.token);
+    expect(response.body.success).toBeFalsy();
   });
 });

@@ -95,37 +95,10 @@ export async function likePost(req, res, next) {
   try {
     const postID = req.params.postID;
     const post = await Post.findById(postID).exec();
-    post.increaseLikesCount();
+    const result = await post.changeLikesCount(req.user._id);
 
-    return res.json({
-      success: true,
-      message: 'Likes count increased',
-      post,
-    });
+    return res.json(result);
   } catch (err) {
     next(err);
   }
 };
-
-/**
- * Dislike post
- * @param {shape} req Request object
- * @param {shape} res Response object
- * @param {function} next Next middleware
- * @return {Object} JSON
- */
-export async function dislikePost(req, res, next) {
-  try {
-    const postID = req.params.postID;
-    const post = await Post.findById(postID).exec();
-    post.increaseLikesCount();
-
-    return res.json({
-      success: true,
-      message: 'Likes count increased',
-      post,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
