@@ -76,7 +76,6 @@ describe('GET /profile/:id', () => {
     const response = await request(app)
         .get(`/profile/${enemy.body.user._id}/reject`)
         .set('Authorization', you.body.token);
-    console.log(response.body);
     expect(response.body.success).toBeTruthy();
     const user1 = await User.findById(you.body.user._id)
         .populate({path: 'friends', populate: {path: 'user'}})
