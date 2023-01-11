@@ -62,11 +62,11 @@ const UserSchema = new Schema({
 
         const user = await model('User').findById(id).exec();
         this.friends.push({
-          user,
+          user: user._id,
           status: 'requested',
         });
         user.friends.push({
-          user: this,
+          user: this._id,
           status: 'pending',
         });
         await user.save();
@@ -84,7 +84,7 @@ const UserSchema = new Schema({
     },
     async acceptFriendRequest(id) {
       try {
-        const result = this.friendCheck(id, 'friends');
+        const result = await this.friendCheck(id, 'friends');
         if (!result.success) {
           return {
             success: result.success,
@@ -94,7 +94,7 @@ const UserSchema = new Schema({
 
         await this.changeFriendStatus(id, 'friends');
         const friend = await model('User').findById(id).exec();
-        await friend.changeFriendStatus(this.id, 'friends'); null;
+        await friend.changeFriendStatus(this.id, 'friends');
         return {
           success: true,
           message: 'Friend accepted succesfully',
@@ -108,7 +108,7 @@ const UserSchema = new Schema({
     },
     async rejectFriendRequest(id) {
       try {
-        const result = this.friendCheck(id, 'rejected');
+        const result = await this.friendCheck(id, 'rejected');
         if (!result.success) {
           return {
             success: result.success,
@@ -116,13 +116,10 @@ const UserSchema = new Schema({
           };
         }
 
-        const index = this.friends.findIndex((user) => user.id = id);
-        this.friends[index].status = 'rejected';
-        await this.save();
+        await this.changeFriendStatus(id, 'rejected');
         return {
           success: true,
           message: 'Succesfully rejected',
-          you: this,
         };
       } catch (err) {
         return {
@@ -139,12 +136,13 @@ const UserSchema = new Schema({
      */
     async changeFriendStatus(id, status) {
       try {
-        const index = this.friends.findIndex((user) => user.id === id);
+        const index = this.friends.findIndex((friend) => {
+          return friend.user._id == id;
+        });
         this.friends[index].status = status;
         await this.save();
         return {
           success: true,
-          user: this,
           message: 'Status changed to ' + status,
         };
       } catch (err) {
@@ -162,14 +160,16 @@ const UserSchema = new Schema({
      */
     async friendCheck(id, status) {
       try {
-        if (this.id === id) {
+        if (this._id === id) {
           return {
             success: false,
             message: 'You cannot add yourself as friend',
           };
         }
 
-        const index = this.friends.findIndex((user) => user.id === id);
+        const index = this.friends.findIndex((friend) => {
+          return friend.user._id == id;
+        });
         if (status !== 'requested' && index < 0) {
           return {
             success: false,

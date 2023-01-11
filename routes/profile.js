@@ -17,21 +17,8 @@ profileRouter
     .get('/:userID/comments', profileController.getUserComments);
 
 profileRouter
-    .post('/:userID/request', async function(req, res, next) {
-      const result = await req.user.sendFriendRequest(req.params.userID);
-      return res.json(result);
-    });
-
-profileRouter
-    .post('/:userID/accept', async function(req, res, next) {
-      const result = await req.user.acceptFriendRequest(req.params.userID);
-      return res.json(result);
-    });
-
-profileRouter
-    .post('/:userID/reject', async function(req, res, next) {
-      const result = await req.user.rejectFriendRequest(req.params.userID);
-      return res.json(result);
-    });
+    .get('/:userID/request', profileController.sendFriendRequest)
+    .get('/:userID/accept', profileController.acceptFriendRequest)
+    .get('/:userID/reject', profileController.rejectFriendRequest);
 
 export default profileRouter;
