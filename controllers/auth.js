@@ -38,7 +38,7 @@ export function register(req, res, next) {
     if (err) return next(err);
 
     const user = new User({username, email, password: hashedPassword});
-    const unique = user.isUserUnique();
+    const unique = await user.isUserUnique();
 
     if (!unique.success) return res.json(unique);
 
