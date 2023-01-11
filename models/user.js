@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   password: {type: String, required: true},
   friends: [{
     user: {type: Schema.Types.ObjectId, ref: 'User'},
-    status: {type: Number, enum: [
+    status: {type: String, enum: [
       'requested',
       'pending',
       'friends',
@@ -52,7 +52,7 @@ const UserSchema = new Schema({
      */
     async sendFriendRequest(id) {
       try {
-        const result = this.friendCheck(id, 'requested');
+        const result = await this.friendCheck(id, 'requested');
         if (!result.success) {
           return {
             success: result.success,
@@ -74,8 +74,6 @@ const UserSchema = new Schema({
         return {
           success: true,
           message: 'Friend request sent succesfully',
-          you: this,
-          user,
         };
       } catch (err) {
         return {
@@ -100,8 +98,6 @@ const UserSchema = new Schema({
         return {
           success: true,
           message: 'Friend accepted succesfully',
-          you: this,
-          friend,
         };
       } catch (err) {
         return {
@@ -183,6 +179,7 @@ const UserSchema = new Schema({
 
         return {
           success: true,
+          message: 'All ok',
         };
       } catch (err) {
         return {
