@@ -4,6 +4,7 @@ const PostSchema = new Schema({
   title: {type: String, required: true},
   text: {type: String, required: true},
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+  published: {type: Boolean, required: true, default: false},
   likes: {
     count: {type: Number, default: 0},
     users: [{

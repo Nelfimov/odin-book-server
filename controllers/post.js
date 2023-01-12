@@ -1,4 +1,5 @@
 import {Post} from '../models/index.js';
+import {MyError} from '../config/index.js';
 
 /**
  * Get all posts from db
@@ -54,13 +55,7 @@ export async function changePost(req, res, next) {
     const {title, text} = req.body;
     const post = await Post.findById(req.params.postID).exec();
     if (!post.author._id.equals(req.user._id)) {
-      const error = new Error('This is not your post');
-      error.status = 400;
-      throw error;
-      // return res.status(400).json({
-      //   success: false,
-      //   message: 'This is not your post',
-      // });
+      throw new MyError('This is not your post', 400);
     }
     post.title = title;
     post.text = text;

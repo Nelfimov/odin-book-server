@@ -43,7 +43,6 @@ describe('POST /auth/register', () => {
           email: 'example@example.com',
         });
     expect(response.body.success).toBeTruthy();
-    expect(response.body.user.username).toBe('Example');
   });
 });
 

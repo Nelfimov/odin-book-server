@@ -6,3 +6,4 @@ export {
   stopMongoServer,
   dropDatabase,
 } from './db-test.js';
+export {default as MyError} from './error.js';
