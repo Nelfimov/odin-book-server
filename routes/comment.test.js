@@ -1,10 +1,6 @@
 import request from 'supertest';
-import {postRouter, authRouter} from './index.js';
 import {initializeMongoServer, stopMongoServer} from '../config/index.js';
 import app from '../app-test.js';
-
-app.use('/posts', postRouter);
-app.use('/auth', authRouter);
 
 
 describe('/comments', () => {

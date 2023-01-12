@@ -54,10 +54,13 @@ export async function changePost(req, res, next) {
     const {title, text} = req.body;
     const post = await Post.findById(req.params.postID).exec();
     if (!post.author._id.equals(req.user._id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'This is not your post',
-      });
+      const error = new Error('This is not your post');
+      error.status = 400;
+      throw error;
+      // return res.status(400).json({
+      //   success: false,
+      //   message: 'This is not your post',
+      // });
     }
     post.title = title;
     post.text = text;

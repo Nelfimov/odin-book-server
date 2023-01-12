@@ -1,12 +1,7 @@
 import request from 'supertest';
-import {profileRouter, authRouter} from './index.js';
 import {initializeMongoServer, stopMongoServer} from '../config/index.js';
 import app from '../app-test.js';
 import {User} from '../models/index.js';
-
-app.use('/profile', profileRouter);
-app.use('/auth', authRouter);
-
 
 describe('GET /profile/:id', () => {
   let you;

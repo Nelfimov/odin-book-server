@@ -1,12 +1,7 @@
 import request from 'supertest';
-import {postRouter, authRouter} from './index.js';
 import {initializeMongoServer, stopMongoServer} from '../config/index.js';
 import app from '../app-test.js';
 import {Post} from '../models/index.js';
-
-app.use('/posts', postRouter);
-app.use('/auth', authRouter);
-
 
 describe('GET /posts', () => {
   let user;
