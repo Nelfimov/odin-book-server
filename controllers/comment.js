@@ -84,7 +84,7 @@ export async function createComment(req, res, next) {
     const {text} = req.body;
     const comment = new Comment({text, author: req.user, post: postID});
     await comment.save();
-    return res.json({
+    return res.status(201).json({
       success: true,
       comment,
     });

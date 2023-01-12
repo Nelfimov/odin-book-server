@@ -33,7 +33,7 @@ export async function createPost(req, res, next) {
     const post = new Post({title, text, author: req.user});
     await post.save();
 
-    return res.json({
+    return res.status(201).json({
       success: true,
       post,
     });
@@ -54,7 +54,7 @@ export async function changePost(req, res, next) {
     const {title, text} = req.body;
     const post = await Post.findById(req.params.postID).exec();
     if (!post.author._id.equals(req.user._id)) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: 'This is not your post',
       });

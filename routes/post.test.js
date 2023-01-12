@@ -115,5 +115,6 @@ describe('POST /posts', () => {
         })
         .set('Authorization', enemy.body.token);
     expect(response.body.success).toBeFalsy();
+    expect(response.statusCode).toBe(400);
   });
 });

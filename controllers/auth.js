@@ -31,8 +31,8 @@ const wrongPassword = {
  */
 export function register(req, res, next) {
   const {username, password, email} = req.body;
-  if (!password) return res.json(noPassword);
-  if (!username || !email) return res.json(noUsernameAndEmail);
+  if (!password) return res.status(400).json(noPassword);
+  if (!username || !email) return res.status(400).json(noUsernameAndEmail);
 
   bcrypt.hash(password, 10, async (err, hashedPassword) => {
     if (err) return next(err);
@@ -40,13 +40,13 @@ export function register(req, res, next) {
     const user = new User({username, email, password: hashedPassword});
     const unique = await user.isUserUnique();
 
-    if (!unique.success) return res.json(unique);
+    if (!unique.success) return res.status(400).json(unique);
 
     await user.save();
 
     const jwt = issueToken(user);
 
-    return res.json({
+    return res.status(201).json({
       success: true,
       message: 'Successfully registered, you can now log in.',
       user,
@@ -65,8 +65,8 @@ export function register(req, res, next) {
  */
 export async function login(req, res, next) {
   const {username, email, password} = req.body;
-  if (!password) return res.json(noPassword);
-  if (!username && !email) return res.json(noUsernameOrEmail);
+  if (!password) return res.status(400).json(noPassword);
+  if (!username && !email) return res.status(400).json(noUsernameOrEmail);
 
   let user;
 
@@ -79,7 +79,7 @@ export async function login(req, res, next) {
   }
 
   if (!user) {
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: 'No such user'});
   }
