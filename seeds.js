@@ -13,11 +13,8 @@ connectMongoose(process.env.MONGODB_URL);
 
 (async () => {
   for (let i = 0; i < 10; ++i) {
-    console.log(USERS);
-    console.log(POSTS);
     await createRandomUser();
     await createRandomPost(i);
-    await createRandomComment(i);
     await createRandomComment(i);
     await createRandomComment(i);
   };
