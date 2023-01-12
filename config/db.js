@@ -11,6 +11,9 @@ export default async function connectMongoose(url) {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    mongoose.connection.on('connection', () => {
+      console.log('Success MONGO');
+    });
   } catch (err) {
     console.log('Mongo error: ' + err);
     process.exit(1);
