@@ -43,6 +43,36 @@ export async function createPost(req, res, next) {
 }
 
 /**
+ * Change post
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function changePost(req, res, next) {
+  try {
+    const {title, text} = req.body;
+    const post = await Post.findById(req.params.postID).exec();
+    if (!post.author._id.equals(req.user._id)) {
+      return res.json({
+        success: false,
+        message: 'This is not your post',
+      });
+    }
+    post.title = title;
+    post.text = text;
+    await post.save();
+
+    return res.json({
+      success: true,
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * Get all posts from friends
  * @param {shape} req Request object
  * @param {shape} res Response object
@@ -51,8 +81,8 @@ export async function createPost(req, res, next) {
  */
 export async function getPostsFromFriends(req, res, next) {
   try {
-    const friends = req.user.friends;
-    const posts = await Post.find({author: {$in: friends}}).lean().exec();
+    const friends = req.user.friends.map((friend) => friend._id);
+    const posts = await Post.find({[author._id]: {$in: friends}}).lean().exec();
 
     return res.json({
       success: true,

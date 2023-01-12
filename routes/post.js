@@ -5,7 +5,6 @@ import commentRouter from './comment.js';
 
 const postRouter = router();
 
-
 postRouter.use(
     passport.authenticate('jwt', {
       session: false, failWithError: true,
@@ -19,7 +18,8 @@ postRouter
     .post('/', postController.createPost);
 
 postRouter
-    .get('/:postID', postController.getPostById);
+    .get('/:postID', postController.getPostById)
+    .patch('/:postID', postController.changePost);
 
 postRouter
     .get('/:postID/like', postController.likePost);

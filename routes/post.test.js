@@ -42,6 +42,7 @@ describe('GET /posts', () => {
 
 describe('POST /posts', () => {
   let user;
+  let enemy;
 
   beforeAll(async () => {
     await initializeMongoServer();
@@ -51,6 +52,13 @@ describe('POST /posts', () => {
           username: 'Example',
           email: 'example@example.com',
           password: '1234',
+        });
+    enemy = await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'Example Enemy',
+          email: 'exampleEnemy@example.com',
+          password: '4321',
         });
   });
 
@@ -78,6 +86,34 @@ describe('POST /posts', () => {
     const response = await request(app)
         .get(`/posts/${post._id}/like`)
         .set('Authorization', user.body.token);
+    expect(response.body.success).toBeFalsy();
+  });
+
+  it('changes post', async () => {
+    const post = await Post.findOne({}).exec();
+    expect(post.author._id.equals(user.body.user._id)).toBeTruthy();
+
+    const response = await request(app)
+        .patch(`/posts/${post._id}`)
+        .send({
+          text: 'new text',
+          title: 'new title',
+        })
+        .set('Authorization', user.body.token);
+    expect(response.body.success).toBeTruthy();
+  });
+
+  it('cannot change others post', async () => {
+    const post = await Post.findOne({}).exec();
+    expect(post.author._id.equals(enemy.body.user._id)).toBeFalsy();
+
+    const response = await request(app)
+        .patch(`/posts/${post._id}`)
+        .send({
+          text: 'new text new',
+          title: 'new title new',
+        })
+        .set('Authorization', enemy.body.token);
     expect(response.body.success).toBeFalsy();
   });
 });
