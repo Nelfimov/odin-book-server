@@ -4,7 +4,7 @@ const PostSchema = new Schema({
   title: {type: String, required: true},
   text: {type: String, required: true},
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
-  published: {type: Boolean, required: true, default: false},
+  isPublished: {type: Boolean, required: true, default: false},
   likes: {
     count: {type: Number, default: 0},
     users: [{
@@ -45,6 +45,32 @@ const PostSchema = new Schema({
         return {
           success: true,
           message,
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: err,
+        };
+      }
+    },
+    /**
+    * Publish post.
+    * @param {string} id ID of user publishing post.
+    * @return {shape}
+    */
+    async publishPost(id) {
+      try {
+        if (!this.author._id.equals(id)) {
+          return {
+            success: false,
+            message: 'You cannot publish other users posts',
+          };
+        };
+        this.isPublished = true;
+        await this.save();
+        return {
+          success: true,
+          post: this,
         };
       } catch (err) {
         return {

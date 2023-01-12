@@ -19,7 +19,8 @@ postRouter
 
 postRouter
     .get('/:postID', postController.getPostById)
-    .patch('/:postID', postController.changePost);
+    .patch('/:postID', postController.changePost)
+    .patch('/:postID/publish', postController.publishPost);
 
 postRouter
     .get('/:postID/like', postController.likePost);

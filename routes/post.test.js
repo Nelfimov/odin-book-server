@@ -112,4 +112,27 @@ describe('POST /posts', () => {
     expect(response.body.success).toBeFalsy();
     expect(response.statusCode).toBe(400);
   });
+
+  it('cannot publish other posts', async () => {
+    let post = await Post.findOne({}).exec();
+    expect(post.author._id.equals(enemy.body.user._id)).toBeFalsy();
+
+    const response = await request(app)
+        .patch(`/posts/${post._id}/publish`)
+        .set('Authorization', enemy.body.token);
+    expect(response.body.success).toBeFalsy();
+    post = await Post.findOne({}).exec();
+    expect(post.isPublished).toBeFalsy();
+  });
+
+  it('can publish own posts', async () => {
+    const post = await Post.findOne({}).exec();
+    expect(post.author._id.equals(user.body.user._id)).toBeTruthy();
+
+    const response = await request(app)
+        .patch(`/posts/${post._id}/publish`)
+        .set('Authorization', user.body.token);
+    expect(response.body.success).toBeTruthy();
+    expect(response.body.post.isPublished).toBeTruthy();
+  });
 });

@@ -130,3 +130,22 @@ export async function likePost(req, res, next) {
     next(err);
   }
 };
+
+/**
+ * Publish post
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next Next middleware
+ * @return {Object} JSON
+ */
+export async function publishPost(req, res, next) {
+  try {
+    const postID = req.params.postID;
+    const post = await Post.findById(postID).exec();
+    const result = await post.publishPost(req.user._id);
+
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+};
