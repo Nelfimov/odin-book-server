@@ -17,8 +17,8 @@ connectMongoose(process.env.MONGODB_URL);
 app.use(logger('dev'));
 app.use(json());
 app.use(passport.initialize());
-app.use(urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(urlencoded({extended: false}));
 
 app.use('/', startRouter);
 app.use('/auth', authRouter);
@@ -38,7 +38,8 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.json({success: false, message: err.message});
+  console.log(err.message);
+  return res.json({success: false, message: err.message});
 });
 
 export default app;

@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
  * @return {shape} Object with token and expiration info.
  */
 export default function issueJWT(user) {
-  const id = user.id;
+  const id = user._id;
   const expiresIn = '1d';
 
   const payload = {

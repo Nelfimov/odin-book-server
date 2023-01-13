@@ -13,16 +13,16 @@ POST http://localhost:3000/auth/login/
 Content-Type: application/json
 
 {
-  "username": "example",
-  "password": "1234"
+  "username": "Nikita",
+  "password": "123"
 }
 
 ###
 GET http://localhost:3000/posts/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTQ1NDk1MTIsImV4cCI6MTY3MzM1NDYzNTkxMn0.UO1aGSC2Qg5T8fHFG2_VtHcIjragctLOSk4yZLH7oR0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2MxMDhmZWY5Y2FmMmM2MTZiMDAzZmIiLCJpYXQiOjE2NzM1OTkxNTA0NjQsImV4cCI6MTY3MzU5OTIzNjg2NH0.I2DRE32KinRcgWBbfDeP0RtP0Rpf-TidVYV2ErMpycw
 
 ###
 POST http://localhost:3000/posts/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkNTk5YTAwYzk1NDYwNTc4MmIzYWIiLCJpYXQiOjE2NzMzNTQ1NDk1MTIsImV4cCI6MTY3MzM1NDYzNTkxMn0.UO1aGSC2Qg5T8fHFG2_VtHcIjragctLOSk4yZLH7oR0
+Authorization: Bearer Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzM1OTc0NDMzOTIsImV4cCI6MTY3MzU5NzUyOTc5Mn0.QDdTJHnut4_k8YCRK2hGGiVb2vBtEqSuq71aV34oZZc
