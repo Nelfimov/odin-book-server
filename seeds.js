@@ -2,6 +2,7 @@ import {faker} from '@faker-js/faker';
 import {User, Post, Comment} from './models/index.js';
 import {connectMongoose} from './config/index.js';
 import * as dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
@@ -29,7 +30,9 @@ async function createRandomUser() {
   const user = new User({
     username: faker.internet.userName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: await bcrypt.hashSync(
+        faker.internet.password(), process.env.SALT,
+    ),
   });
   USERS.push(user);
   await user.save();
