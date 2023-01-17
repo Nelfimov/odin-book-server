@@ -1,4 +1,25 @@
-import {Comment, Post} from '../models/index.js';
+import {Comment, Post, User} from '../models/index.js';
+
+/**
+ * Get user info.
+ * @param {shape} req Request object
+ * @param {shape} res Response object
+ * @param {function} next
+ * @return {shape} User info
+ */
+export async function getUserInfo(req, res, next) {
+  try {
+    const user = await User.findById(req.params.userID)
+        .populate('friends.user', 'username')
+        .lean().exec();
+    return res.json({
+      success: true,
+      user,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
 
 /**
  * Get user's posts.
@@ -9,7 +30,7 @@ import {Comment, Post} from '../models/index.js';
 export async function getUserPosts(req, res, next) {
   try {
     const posts = await Post.find({author: req.params.userID})
-	.populate('author', 'username').lean().exec();
+        .populate('author', 'username').lean().exec();
     return res.json({
       success: true,
       posts,
@@ -28,7 +49,7 @@ export async function getUserPosts(req, res, next) {
 export async function getUserComments(req, res, next) {
   try {
     const comments = await Comment.find({author: req.params.userID})
-	.populate('author', 'username').lean().exec();
+        .populate('author', 'username').lean().exec();
     return res.json({
       success: true,
       comments,

@@ -11,6 +11,9 @@ profileRouter.use(
 );
 
 profileRouter
+    .get('/:userID', profileController.getUserInfo);
+
+profileRouter
     .get('/:userID/posts', profileController.getUserPosts);
 
 profileRouter
