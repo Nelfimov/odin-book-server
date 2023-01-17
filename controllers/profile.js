@@ -8,7 +8,8 @@ import {Comment, Post} from '../models/index.js';
  */
 export async function getUserPosts(req, res, next) {
   try {
-    const posts = await Post.find({author: req.params.userID}).exec();
+    const posts = await Post.find({author: req.params.userID})
+	.populate('author', 'username').lean().exec();
     return res.json({
       success: true,
       posts,
@@ -26,7 +27,8 @@ export async function getUserPosts(req, res, next) {
  */
 export async function getUserComments(req, res, next) {
   try {
-    const comments = await Comment.find({author: req.params.userID}).exec();
+    const comments = await Comment.find({author: req.params.userID})
+	.populate('author', 'username').lean().exec();
     return res.json({
       success: true,
       comments,

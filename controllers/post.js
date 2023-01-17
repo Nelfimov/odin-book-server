@@ -10,6 +10,7 @@ import {Post} from '../models/index.js';
 export async function getPosts(req, res, next) {
   try {
     const posts = await Post.find({})
+        .populate('author', 'username')
         .sort('-createdAt')
         .lean().exec();
 
