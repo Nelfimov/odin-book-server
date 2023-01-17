@@ -13,6 +13,7 @@ export async function getComments(req, res, next) {
     const postID = req.params.postID;
     const comments = await Comment.find({post: postID})
         .populate('author', 'username')
+        .sort('-createdAt')
         .lean().exec();
     return res.json({
       success: true,

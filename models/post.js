@@ -29,7 +29,8 @@ const PostSchema = new Schema({
         }
 
         let message;
-        const userIndex = this.likes.users.findIndex((user) => user._id == id);
+        const userIndex = this.likes.users
+            .findIndex((user) => user._id.equals(id));
         if (userIndex < 0) {
           ++this.likes.count;
           this.likes.users.push({

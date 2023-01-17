@@ -10,7 +10,9 @@ import {MyError} from '../config/index.js';
  */
 export async function getPosts(req, res, next) {
   try {
-    const posts = await Post.find({}).lean().exec();
+    const posts = await Post.find({}).populate('author', 'username')
+        .sort('-createdAt')
+        .lean().exec();
 
     return res.json({
       success: true,
@@ -80,7 +82,9 @@ export async function changePost(req, res, next) {
 export async function getPostsFromFriends(req, res, next) {
   try {
     const friends = req.user.friends.map((friend) => friend._id);
-    const posts = await Post.find({[author._id]: {$in: friends}}).lean().exec();
+    const posts = await Post.find({[author._id]: {$in: friends}})
+        .populate('author', 'username')
+        .lean().exec();
 
     return res.json({
       success: true,
@@ -101,7 +105,9 @@ export async function getPostsFromFriends(req, res, next) {
 export async function getPostById(req, res, next) {
   try {
     const postID = req.params.postID;
-    const post = await Post.findById(postID).lean().exec();
+    const post = await Post.findById(postID)
+        .populate('author', 'username')
+        .lean().exec();
 
     return res.json({
       success: true,
