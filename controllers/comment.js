@@ -1,5 +1,4 @@
 import {Comment, Post} from '../models/index.js';
-import {MyError} from '../config/index.js';
 import {parallel} from 'async';
 
 /**
@@ -52,10 +51,16 @@ export async function getCommentById(req, res, next) {
       const {post, comment} = results;
 
       if (!post) {
-        throw new MyError('No such post exists', 400);
+        return res.status(400).json({
+          success: false,
+          message: 'No such post exists',
+        });
       };
       if (!comment) {
-        throw new MyError('No such comment exists', 400);
+        return res.status(400).json({
+          success: false,
+          message: 'No such comment exists',
+        });
       };
 
       return res.json({
@@ -78,7 +83,12 @@ export async function createComment(req, res, next) {
   try {
     const postID = req.params.postID;
     const post = await Post.findById(postID).lean().exec();
-    if (!post) throw new MyError('There is no such post', 400);
+    if (!post) {
+      return res.status(400).json({
+        success: false,
+        message: 'There is no such post',
+      });
+    }
 
     const {text} = req.body;
     const comment = new Comment({text, author: req.user, post: postID});

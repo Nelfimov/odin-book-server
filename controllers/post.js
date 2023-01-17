@@ -1,5 +1,4 @@
 import {Post} from '../models/index.js';
-import {MyError} from '../config/index.js';
 
 /**
  * Get all posts from db
@@ -10,7 +9,7 @@ import {MyError} from '../config/index.js';
  */
 export async function getPosts(req, res, next) {
   try {
-    const posts = await Post.find({}).populate('author', 'username')
+    const posts = await Post.find({})
         .sort('-createdAt')
         .lean().exec();
 
@@ -57,7 +56,10 @@ export async function changePost(req, res, next) {
     const {title, text} = req.body;
     const post = await Post.findById(req.params.postID).exec();
     if (!post.author._id.equals(req.user._id)) {
-      throw new MyError('This is not your post', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'This is not your post',
+      });
     }
     post.title = title;
     post.text = text;
@@ -81,8 +83,9 @@ export async function changePost(req, res, next) {
  */
 export async function getPostsFromFriends(req, res, next) {
   try {
-    const friends = req.user.friends.map((friend) => friend._id);
-    const posts = await Post.find({[author._id]: {$in: friends}})
+    const friends = req.user.friends.map((friend) => friend.user._id);
+    const posts = await Post.find({author: {$in: friends},
+    })
         .populate('author', 'username')
         .lean().exec();
 

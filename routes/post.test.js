@@ -5,6 +5,7 @@ import {Post} from '../models/index.js';
 
 describe('GET /posts', () => {
   let user;
+  let friend;
 
   beforeAll(async () => {
     await initializeMongoServer();
@@ -14,6 +15,13 @@ describe('GET /posts', () => {
           username: 'Example',
           email: 'example@example.com',
           password: '1234',
+        });
+    friend = await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'Example Friend',
+          email: 'exampleFriend@example.com',
+          password: '1111',
         });
   });
 
@@ -32,6 +40,33 @@ describe('GET /posts', () => {
         .get('/posts')
         .set('Authorization', user.body.token);
     expect(response.body.success).toBeTruthy();
+  });
+
+  it('can get posts from friends', async () => {
+    const createPost = await request(app)
+        .post('/posts')
+        .set('Authorization', user.body.token)
+        .send({
+          text: 'this is a new post',
+          title: 'title',
+        });
+    expect(createPost.body.success).toBeTruthy();
+
+    const createFriend = await request(app)
+        .get(`/profile/${friend.body.user._id}/request`)
+        .set('Authorization', user.body.token);
+    expect(createFriend.body.success).toBeTruthy();
+
+    const acceptFriend = await request(app)
+        .get(`/profile/${user.body.user._id}/accept`)
+        .set('Authorization', friend.body.token);
+    expect(acceptFriend.body.success).toBeTruthy();
+
+    const response = await request(app)
+        .get('/posts/friends')
+        .set('Authorization', friend.body.token);
+    expect(response.body.success).toBeTruthy();
+    expect(response.body.posts.length).toBe(1);
   });
 });
 

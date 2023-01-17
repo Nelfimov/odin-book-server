@@ -18,6 +18,9 @@ postRouter
     .post('/', postController.createPost);
 
 postRouter
+    .get('/friends', postController.getPostsFromFriends);
+
+postRouter
     .get('/:postID', postController.getPostById)
     .patch('/:postID', postController.changePost)
     .patch('/:postID/publish', postController.publishPost);

@@ -12,10 +12,6 @@ import {issueToken} from '../config/index.js';
 export function register(req, res, next) {
   const {username, password, email} = req.body;
   if (!password) {
-    // throw new MyError(
-    //     'You need to provide a password.',
-    //     400,
-    // );
     return res.status(400).json({
       success: false,
       message: 'You need to provide a password',
@@ -23,10 +19,6 @@ export function register(req, res, next) {
   }
 
   if (!username || !email) {
-    // throw new MyError(
-    //     'You need to provide both username and email',
-    //     400,
-    // );
     return res.status(400).json({
       success: false,
       message: 'You need to provide both username and email',
@@ -39,7 +31,6 @@ export function register(req, res, next) {
     const user = new User({username, email, password: hashedPassword});
     const unique = await user.isUserUnique();
 
-    // if (!unique.success) throw new MyError(unique);
     if (!unique.success) return res.status(400).json(unique);
 
     await user.save();
@@ -67,21 +58,12 @@ export async function login(req, res, next) {
   try {
     const {username, email, password} = req.body;
     if (!password) {
-      // throw new MyError(
-      //     'You need to provide a password.',
-      //     400,
-      // );
       return res.status(400).json({
         success: true,
         message: 'You need to provide a password.',
       });
     }
     if (!username) {
-      // if (!email) {
-      //   throw new MyError(
-      // 'You need to provide either username or email', 400
-      // );
-      // }
       return res.status(400).json({
         success: false,
         message: 'You need to provide either username or email.',
@@ -95,7 +77,6 @@ export async function login(req, res, next) {
     if (!user && email) {
       user = await User.findOne({email}).lean().exec();
     }
-    // if (!user) throw new MyError('No such user', 400);
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -104,7 +85,6 @@ export async function login(req, res, next) {
     }
 
     const result = bcrypt.compareSync(password, user.password);
-    // if (!result) throw new MyError('Wrong password, try again', 400);
     if (!result) {
       return res.status(400).json({
         success: false,
