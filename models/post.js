@@ -34,18 +34,19 @@ const PostSchema = new Schema({
         if (userIndex < 0) {
           ++this.likes.count;
           this.likes.users.push({
-            user: id,
+            _id: id,
           });
           message = 'Succesfully liked post';
         } else {
           --this.likes.count;
-          this.likes.users.slice(userIndex, 1);
+          this.likes.users.splice(userIndex, 1);
           message = 'Succesfully unliked post';
         };
         await this.save();
         return {
           success: true,
           message,
+          post: this,
         };
       } catch (err) {
         return {
