@@ -178,7 +178,7 @@ const UserSchema = new Schema({
         }
 
         const index = this.friends.findIndex((friend) => {
-          return friend.user._id == id;
+          return friend.user._id.equals(id);
         });
         if (status !== 'requested' && index < 0) {
           return {
