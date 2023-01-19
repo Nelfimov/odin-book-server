@@ -84,7 +84,9 @@ export async function changePost(req, res, next) {
  */
 export async function getPostsFromFriends(req, res, next) {
   try {
-    const friends = req.user.friends.map((friend) => friend.user._id);
+    const friends = req.user.friends.map((friend) => {
+      if (friend.status === 'friends') return friend.user._id;
+    });
     const posts = await Post.find({author: {$in: friends},
     })
         .populate('author', 'username')
