@@ -180,16 +180,36 @@ const UserSchema = new Schema({
         const index = this.friends.findIndex((friend) => {
           return friend.user._id.equals(id);
         });
-        if (status !== 'requested' && index < 0) {
+        if (index < 0 && status === 'requested') {
           return {
-            success: false,
-            message: 'This user is not in your friends list',
+            success: true,
+            message: 'All ok',
           };
         }
 
+        if (index > 0) {
+          switch (status) {
+            case 'friends':
+              return {
+                success: true,
+                message: 'All ok',
+              };
+            case 'rejected':
+              return {
+                success: true,
+                message: 'All ok',
+              };
+            case null:
+              return {
+                success: true,
+                message: 'All ok',
+              };
+          }
+        }
+
         return {
-          success: true,
-          message: 'All ok',
+          success: false,
+          message: 'Error',
         };
       } catch (err) {
         return {
