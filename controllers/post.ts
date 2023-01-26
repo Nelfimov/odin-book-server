@@ -114,7 +114,9 @@ export async function getPostsFromFriends(
       return;
     }
     const friends = req.user.friends.map((friend: Friend) => {
-      return friend.status === 'friends' && friend.user._id;
+      if (friend.status === 'friends') {
+        return friend.user._id;
+      }
     });
     const posts = await Post.find({ author: { $in: friends } })
       .populate('author', 'username')
