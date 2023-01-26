@@ -10,7 +10,7 @@ export async function getUserInfo(
   next: NextFunction
 ): Promise<void> {
   try {
-    const user = await User.findById(req.params.userID)
+    const user = await User.findById(req.params.userID, 'username, friends')
       .populate('friends.user', 'username')
       .lean()
       .exec();
