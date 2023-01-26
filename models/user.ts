@@ -140,9 +140,9 @@ UserSchema.methods.changeFriendStatus = async function changeFriendStatus(
   status
 ) {
   try {
-    const index = this.friends.findIndex((friend: Friend) => {
-      return friend.user._id === id;
-    });
+    const index = this.friends.findIndex((friend: Friend) =>
+      friend.user._id.equals(id)
+    );
     this.friends[index].status = status;
     await this.save();
     return {
