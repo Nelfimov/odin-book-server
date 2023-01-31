@@ -26,6 +26,7 @@ app.use(json());
 app.use(passport.initialize());
 app.use(cookieParser());
 app.use(urlencoded({ extended: false }));
+app.use('/static', express.static('static'));
 
 app.use('/', startRouter);
 app.use('/auth', authRouter);

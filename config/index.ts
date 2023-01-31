@@ -7,3 +7,4 @@ export {
   dropDatabase,
 } from './db-test.js';
 export { default as MyError } from './error.js';
+export * from './multer.js';

@@ -8,6 +8,7 @@ import {
 
 const UserSchema = new Schema<IUser, UserModel, UserMethods>({
   username: { type: String, unique: true, required: true },
+  image: { type: String },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   friends: [

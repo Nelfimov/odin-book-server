@@ -5,6 +5,7 @@ export interface User {
   _id: Types.ObjectId;
   username: string;
   email: string;
+  image?: string;
   password?: string;
   friends: Friend[];
 }

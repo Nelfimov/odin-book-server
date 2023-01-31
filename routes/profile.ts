@@ -1,5 +1,5 @@
 import { Router as router } from 'express';
-import { passport } from '../config/index.js';
+import { passport, upload } from '../config/index.js';
 import { profileController } from '../controllers/index.js';
 
 const profileRouter = router();
@@ -12,10 +12,14 @@ profileRouter.use(
 );
 
 profileRouter.get('/:userID', profileController.getUserInfo);
-
 profileRouter.get('/:userID/posts', profileController.getUserPosts);
-
 profileRouter.get('/:userID/comments', profileController.getUserComments);
+
+profileRouter.patch(
+  '/:userID/upload',
+  upload.single('image'),
+  profileController.uploadProfilePicture
+);
 
 profileRouter
   .get('/:userID/request', profileController.sendFriendRequest)

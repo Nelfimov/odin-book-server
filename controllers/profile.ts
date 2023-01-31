@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { Comment, Post, User } from '../models/index.js';
 
 /**
@@ -138,6 +139,43 @@ export async function deleteFromFriends(
     res.json(result);
     return;
   } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Upload new profile picture.
+ */
+export async function uploadProfilePicture(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    if (req.user == null) return;
+
+    const id = req.params.userID;
+    if (!req.user._id.equals(id)) {
+      res.json({
+        success: false,
+        message: 'Cannot change other peoples profile pics',
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id))
+      res.json({
+        success: false,
+        message: 'User id in url is wrong',
+      });
+
+    const path = req.file?.path.replace(/\\/g, '/');
+    await User.findByIdAndUpdate(
+      id,
+      (req.body = { image: `http://localhost:3000/${path}` }),
+      { new: true }
+    );
+    return;
+  } catch (err) {
+    console.log(err);
     next(err);
   }
 }
