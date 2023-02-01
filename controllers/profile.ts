@@ -13,7 +13,7 @@ export async function getUserInfo(
   try {
     const user = await User.findById(
       req.params.userID,
-      'username, friends, image'
+      'username friends image'
     )
       .populate('friends.user', 'username')
       .lean()
