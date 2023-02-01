@@ -18,6 +18,11 @@ Content-Type: application/json
 }
 
 ###
+PATCH http://localhost:3000/profile/63c108fef9caf2c616b003fb/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2MxMDhmZWY5Y2FmMmM2MTZiMDAzZmIiLCJpYXQiOjE2NzUxNzM5MDgwMTQsImV4cCI6MTY3NTE3Mzk5NDQxNH0.uCLsAZuKswWjTdieAYx2x7VnvCSxf4RuUdktMayGq_Q
+
+
+###
 GET http://localhost:3000/posts/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2MxMDhmZWY5Y2FmMmM2MTZiMDAzZmIiLCJpYXQiOjE2NzM1OTkxNTA0NjQsImV4cCI6MTY3MzU5OTIzNjg2NH0.I2DRE32KinRcgWBbfDeP0RtP0Rpf-TidVYV2ErMpycw

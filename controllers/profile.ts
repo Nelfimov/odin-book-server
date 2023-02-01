@@ -152,7 +152,21 @@ export async function uploadProfilePicture(
   next: NextFunction
 ): Promise<void> {
   try {
-    if (req.user == null) return;
+    if (req.user == null) {
+      res.json({
+        success: false,
+        message: 'You are not authorized',
+      });
+      return;
+    }
+
+    if (!req.file) {
+      res.json({
+        success: false,
+        message: 'File not in request',
+      });
+      return;
+    }
 
     const id = req.params.userID;
     if (!req.user._id.equals(id)) {
@@ -160,22 +174,27 @@ export async function uploadProfilePicture(
         success: false,
         message: 'Cannot change other peoples profile pics',
       });
+      return;
     }
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       res.json({
         success: false,
         message: 'User id in url is wrong',
       });
+      return;
+    }
 
-    const path = req.file?.path.replace(/\\/g, '/');
+    const path = req.file.path.replace(/\\/g, '/');
     await User.findByIdAndUpdate(
       id,
       (req.body = { image: `http://localhost:3000/${path}` }),
       { new: true }
     );
+    res.json({
+      success: true,
+    });
     return;
   } catch (err) {
-    console.log(err);
     next(err);
   }
 }
