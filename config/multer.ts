@@ -1,9 +1,11 @@
 import { default as multer, FileFilterCallback } from 'multer';
 
 const storage = multer.diskStorage({
-  destination: 'statics/images/profile',
-  filename(req, file, callback) {
-    callback(null, file.originalname);
+  destination: (req, file, cb) => {
+    cb(null, 'statics/images/profile-pictures');
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.params.userID);
   },
 });
 
