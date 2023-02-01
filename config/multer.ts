@@ -1,11 +1,9 @@
 import { default as multer, FileFilterCallback } from 'multer';
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'statics/images/profile-pictures');
-  },
+  destination: 'statics/images/profile-pictures',
   filename: (req, file, cb) => {
-    cb(null, req.params.userID);
+    cb(null, file.originalname);
   },
 });
 
@@ -15,9 +13,9 @@ const fileFilter = (
   cb: FileFilterCallback
 ): void => {
   if (
-    file.mimetype.includes('jpeg') ||
-    file.mimetype.includes('jpg') ||
-    file.mimetype.includes('png')
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/png'
   ) {
     cb(null, true);
   } else {
@@ -25,4 +23,4 @@ const fileFilter = (
   }
 };
 
-export const upload = multer({ storage, fileFilter });
+export const upload = multer({ storage: storage, fileFilter: fileFilter });

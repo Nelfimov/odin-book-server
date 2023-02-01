@@ -11,7 +11,10 @@ export async function getUserInfo(
   next: NextFunction
 ): Promise<void> {
   try {
-    const user = await User.findById(req.params.userID, 'username, friends')
+    const user = await User.findById(
+      req.params.userID,
+      'username, friends, image'
+    )
       .populate('friends.user', 'username')
       .lean()
       .exec();
@@ -154,6 +157,14 @@ export async function uploadProfilePicture(
   try {
     if (req.user == null) return;
 
+    if (!req.file) {
+      res.json({
+        success: false,
+        message: 'No file in request',
+      });
+      return;
+    }
+
     const id = req.params.userID;
     if (!req.user._id.equals(id)) {
       res.json({
@@ -167,7 +178,7 @@ export async function uploadProfilePicture(
         message: 'User id in url is wrong',
       });
 
-    const path = req.file?.path.replace(/\\/g, '/');
+    const path = req.file.path.replace(/\\/g, '/');
     await User.findByIdAndUpdate(
       id,
       (req.body = { image: `http://localhost:3000/${path}` }),

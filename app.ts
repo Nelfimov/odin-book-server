@@ -3,6 +3,7 @@ import express, { json, urlencoded, Response, Request } from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import * as dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
 import { connectMongoose, passport } from './config/index.js';
 import {
@@ -12,6 +13,7 @@ import {
   startRouter,
 } from './routes/index.js';
 import { HttpException } from './exceptions/http-exception.js';
+import path from 'path';
 
 dotenv.config();
 
@@ -21,12 +23,15 @@ connectMongoose(
   typeof process.env.MONGODB_URL === 'string' ? process.env.MONGODB_URL : ''
 );
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(logger('dev'));
 app.use(json());
 app.use(passport.initialize());
 app.use(cookieParser());
 app.use(urlencoded({ extended: false }));
-app.use('/static', express.static('static'));
+app.use('/statics', express.static(path.join(__dirname, 'statics')));
 
 app.use('/', startRouter);
 app.use('/auth', authRouter);
