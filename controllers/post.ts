@@ -14,14 +14,12 @@ export async function getPosts(
     const posts = await Post.find({})
       .populate('author', 'username')
       .sort('-createdAt')
-      .lean()
+      // .lean()
       .exec();
-
     res.json({
       success: true,
       posts,
     });
-    return;
   } catch (err) {
     next(err);
   }
@@ -39,7 +37,6 @@ export async function createPost(
     const { title, text } = req.body;
     const post = new Post({ title, text, author: req.user });
     await post.save();
-
     res.status(201).json({
       success: true,
       post,

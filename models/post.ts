@@ -8,8 +8,8 @@ import { Schema, model } from 'mongoose';
 
 const PostSchema = new Schema<IPost, PostModel, PostMethods>(
   {
-    title: { type: String, required: true },
-    text: { type: String, required: true },
+    title: { type: String, required: true, trim: true },
+    text: { type: String, required: true, trim: true },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     isPublished: { type: Boolean, required: true, default: false },
     likes: {
@@ -23,8 +23,13 @@ const PostSchema = new Schema<IPost, PostModel, PostMethods>(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
   }
 );
+
+PostSchema.virtual('textPreview').get(function () {
+  return this.text.length > 150 ? `${this.text.slice(0, 150)}...` : this.text;
+});
 
 PostSchema.methods.changeLikesCount = async function changeLikesCount(id) {
   try {

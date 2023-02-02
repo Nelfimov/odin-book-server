@@ -11,6 +11,7 @@ export interface Post {
     count: number;
     users: User[];
   };
+  textPreview: string;
 }
 
 export interface PostMethods {
