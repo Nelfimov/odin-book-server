@@ -11,8 +11,11 @@ export async function getPosts(
   next: NextFunction
 ): Promise<void> {
   try {
+    const skip = (req.query.skip as number | undefined) ?? 0;
     const posts = await Post.find({})
       .populate('author', 'username')
+      .skip(skip)
+      .limit(5)
       .sort('-createdAt')
       // .lean()
       .exec();
