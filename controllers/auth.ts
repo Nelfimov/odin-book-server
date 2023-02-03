@@ -3,6 +3,45 @@ import { User } from '../models/index.js';
 import { issueToken } from '../config/index.js';
 import { NextFunction, Response, Request } from 'express';
 
+function generateString(length: number): string {
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+export async function demo(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const username = `Anon-${generateString(5)}`;
+    const password = bcrypt.hashSync(generateString(8), 10);
+    const email = `${username}@example.com`;
+
+    const user = new User({ username, password, email });
+    await user.save();
+    const jwt = issueToken(user);
+    res.status(201).json({
+      success: true,
+      message: 'Successfully registered, you can now log in.',
+      user,
+      token: jwt.token,
+      expiresIn: jwt.expires,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
+
 /**
  * Register new user
  */
@@ -110,7 +149,6 @@ export async function login(
       token: jwt.token,
       expiresIn: jwt.expires,
     });
-    return;
   } catch (err) {
     next(err);
   }
