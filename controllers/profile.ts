@@ -171,19 +171,26 @@ export async function uploadProfilePicture(
         success: false,
         message: 'Cannot change other peoples profile pics',
       });
+      return;
     }
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       res.json({
         success: false,
         message: 'User id in url is wrong',
       });
+      return;
+    }
 
     const path = req.file.path.replace(/\\/g, '/');
-    await User.findByIdAndUpdate(
+    User.findByIdAndUpdate(
       id,
       (req.body = { image: `http://localhost:3000/${path}` }),
       { new: true }
     );
+    res.json({
+      success: true,
+      message: 'Profile image changed successfully',
+    });
     return;
   } catch (err) {
     console.log(err);
