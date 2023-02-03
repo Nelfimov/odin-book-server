@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import * as dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 import { connectMongoose, passport } from './config/index.js';
 import {
@@ -31,6 +32,7 @@ app.use(json());
 app.use(passport.initialize());
 app.use(cookieParser());
 app.use(urlencoded({ extended: false }));
+app.use(cors());
 app.use('/statics', express.static(path.join(__dirname, 'statics')));
 
 app.use('/', startRouter);
