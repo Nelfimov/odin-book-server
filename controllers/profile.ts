@@ -39,7 +39,6 @@ export async function getUserPosts(
   try {
     const posts = await Post.find({ author: req.params.userID })
       .populate('author', 'username')
-      .lean()
       .exec();
     res.json({
       success: true,
@@ -182,14 +181,15 @@ export async function uploadProfilePicture(
     }
 
     const path = req.file.path.replace(/\\/g, '/');
-    User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       id,
       (req.body = { image: `http://localhost:3000/${path}` }),
       { new: true }
-    );
+    ).exec();
     res.json({
       success: true,
       message: 'Profile image changed successfully',
+      user,
     });
     return;
   } catch (err) {

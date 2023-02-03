@@ -120,7 +120,6 @@ export async function getPostsFromFriends(
     });
     const posts = await Post.find({ author: { $in: friends } })
       .populate('author', 'username')
-      .lean()
       .exec();
 
     res.json({
