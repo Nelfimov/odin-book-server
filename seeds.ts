@@ -1,6 +1,6 @@
-import {faker} from '@faker-js/faker';
-import {User, Post, Comment} from './models/index.js';
-import {connectMongoose} from './config/index.js';
+import { faker } from '@faker-js/faker';
+import { User, Post, Comment } from './models/index.js';
+import { connectMongoose } from './config/index.js';
 import * as dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import { User as IUser, Post as IPost } from './types/common/index.js';
@@ -11,7 +11,9 @@ const USERS: IUser[] = [];
 const POSTS: IPost[] = [];
 const COMMENTS = [];
 
-connectMongoose(typeof process.env.MONGODB_URL === 'string' ? process.env.MONGODB_URL : '');
+connectMongoose(
+  typeof process.env.MONGODB_URL === 'string' ? process.env.MONGODB_URL : ''
+);
 
 (async () => {
   for (let i = 0; i < 10; ++i) {
@@ -30,8 +32,10 @@ async function createRandomUser() {
   const user = new User({
     username: faker.internet.userName(),
     email: faker.internet.email(),
+    image: faker.image.avatar(),
     password: await bcrypt.hashSync(
-        faker.internet.password(), process.env.SALT,
+      faker.internet.password(),
+      parseInt(process.env.SALT as string)
     ),
   });
   USERS.push(user);
@@ -51,7 +55,7 @@ async function createRandomPost(index: number) {
     isPublished: true,
     likes: {
       count: index,
-      users: USERS.map((user) => !user ? null : user._id),
+      users: USERS.map((user) => (!user ? null : user._id)),
     },
   });
   POSTS.push(post);
@@ -70,4 +74,3 @@ async function createRandomComment(index: number) {
   COMMENTS.push(comment);
   await comment.save();
 }
-
