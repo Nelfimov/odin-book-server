@@ -45,9 +45,7 @@ PostSchema.methods.changeLikesCount = async function changeLikesCount(id) {
     if (userIndex == null) return;
     if (userIndex < 0) {
       ++this.likes.count;
-      this.likes.users.push({
-        user: id,
-      });
+      this.likes.users.push(id);
       message = 'Succesfully liked post';
       increasedCount = true;
     } else {
