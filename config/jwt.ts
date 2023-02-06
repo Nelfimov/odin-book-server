@@ -4,7 +4,7 @@ import { User, Token } from '../types/common/index.js';
 /**
  * Issue token for the user.
  */
-export default function issueJWT(user: User): Token {
+export default function issueJWT(user: User): Token | undefined {
   const id = user._id;
   const expiresIn = '1d';
 
@@ -13,9 +13,12 @@ export default function issueJWT(user: User): Token {
     iat: Date.now(),
   };
 
-  const secret: string = process.env.JWT_SECRET ?? '';
-
-  const signedToken: string = jwt.sign(payload, secret, { expiresIn });
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    console.log('Secret cannot be read.');
+    return;
+  }
+  const signedToken = jwt.sign(payload, secret, { expiresIn });
 
   return {
     token: `Bearer ${signedToken}`,

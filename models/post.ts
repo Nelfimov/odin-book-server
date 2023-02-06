@@ -14,11 +14,7 @@ const PostSchema = new Schema<IPost, PostModel, PostMethods>(
     isPublished: { type: Boolean, required: true, default: false },
     likes: {
       count: { type: Number, default: 0 },
-      users: [
-        {
-          user: { type: Schema.Types.ObjectId, ref: 'User' },
-        },
-      ],
+      users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     },
   },
   {
@@ -33,7 +29,7 @@ PostSchema.virtual('textPreview').get(function () {
 
 PostSchema.methods.changeLikesCount = async function changeLikesCount(id) {
   try {
-    if (this.author._id.equals(id) === false) {
+    if (this.author._id.equals(id)) {
       return {
         success: false,
         message: 'Cannot like your own posts',
@@ -41,6 +37,7 @@ PostSchema.methods.changeLikesCount = async function changeLikesCount(id) {
     }
 
     let message: string;
+    let increasedCount: boolean;
     if (this.likes === undefined) return;
     const userIndex = this.likes.users.findIndex((user: User) =>
       user._id.equals(id)
@@ -52,14 +49,17 @@ PostSchema.methods.changeLikesCount = async function changeLikesCount(id) {
         user: id,
       });
       message = 'Succesfully liked post';
+      increasedCount = true;
     } else {
       --this.likes.count;
       this.likes.users.splice(userIndex, 1);
       message = 'Succesfully unliked post';
+      increasedCount = false;
     }
     await this.save();
     return {
       success: true,
+      increasedCount,
       message,
     };
   } catch (err) {

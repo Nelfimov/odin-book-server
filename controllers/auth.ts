@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/index.js';
 import { issueToken } from '../config/index.js';
 import { NextFunction, Response, Request } from 'express';
+import { default as JWToken } from 'jsonwebtoken';
 
 function generateString(length: number): string {
   let result = '';
@@ -29,6 +30,13 @@ export async function demo(
     const user = new User({ username, password, email });
     await user.save();
     const jwt = issueToken(user);
+    if (!jwt) {
+      res.json({
+        success: false,
+        message: 'Token has not been issued due to server error.',
+      });
+      return;
+    }
     res.status(201).json({
       success: true,
       message: 'Successfully registered, you can now log in.',
@@ -80,6 +88,13 @@ export async function register(
     await user.save();
 
     const jwt = issueToken(user);
+    if (!jwt) {
+      res.json({
+        success: false,
+        message: 'Token has not been issued due to server error.',
+      });
+      return;
+    }
 
     res.status(201).json({
       success: true,
@@ -142,6 +157,13 @@ export async function login(
       return;
     }
     const jwt = issueToken(user);
+    if (!jwt) {
+      res.json({
+        success: false,
+        message: 'Token cannot be issued due to internal server error.',
+      });
+      return;
+    }
     res.json({
       success: true,
       message: 'Successfull log in',
@@ -150,6 +172,33 @@ export async function login(
       expiresIn: jwt.expires,
     });
   } catch (err) {
+    next(err);
+  }
+}
+
+export async function validateJWT(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const incomingToken = req.body.token;
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      res.json({
+        success: false,
+        message: 'Internal server error: secret cannot be read.',
+      });
+      return;
+    }
+
+    const result = JWToken.verify(incomingToken, secret);
+    res.json({
+      success: true,
+      result,
+    });
+  } catch (err) {
+    console.log(err);
     next(err);
   }
 }
