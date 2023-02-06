@@ -14,6 +14,13 @@ export async function getPosts(
     const skip = (req.query.skip as number | undefined) ?? 0;
     const posts = await Post.find({})
       .populate('author', 'username')
+      .populate({
+        path: 'likes',
+        populate: {
+          path: 'users',
+          select: 'username',
+        },
+      })
       .skip(skip)
       .limit(5)
       .sort('-createdAt')
@@ -120,6 +127,13 @@ export async function getPostsFromFriends(
     });
     const posts = await Post.find({ author: { $in: friends } })
       .populate('author', 'username')
+      .populate({
+        path: 'likes',
+        populate: {
+          path: 'users',
+          select: 'username',
+        },
+      })
       .exec();
 
     res.json({
@@ -144,6 +158,13 @@ export async function getPostById(
     const postID = req.params.postID;
     const post = await Post.findById(postID)
       .populate('author', 'username')
+      .populate({
+        path: 'likes',
+        populate: {
+          path: 'users',
+          select: 'username',
+        },
+      })
       .lean()
       .exec();
 
